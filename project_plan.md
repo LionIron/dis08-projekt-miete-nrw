@@ -1,103 +1,77 @@
-Project Plan – Mietpreise NRW (DIS08 Project)
-1. Thema / Motivation
+# DIS08 Projektplan – Mieten & Wohnkosten in NRW
 
-Mietpreise in NRW steigen seit Jahren. Besonders in Städten wie Köln, Düsseldorf, Bonn und Münster gibt es Wohnraummangel und hohe Preissteigerungen.
-Ziel des Projekts ist es, Open Data zu Mietpreisen mit selbst gescrapten Daten (z. B. Immobilienportale, Stadt-Webseiten, Wikipedia) zu kombinieren, um Trends zu analysieren.
+## 1. Thema und Motivation
 
-Warum interessant?
+Ich untersuche Angebotsmieten von Wohnungen in Deutschland mit Fokus auf Nordrhein-Westfalen (NRW).  
+Mich interessiert, wie hoch die Mieten in verschiedenen Städten sind, wie sie sich nach Wohnungsgröße unterscheiden und welcher Anteil der Wohnungen als „relativ günstig“ oder „teuer“ gelten kann.
 
-Relevantes gesellschaftliches Thema
+## 2. Datensätze
 
-Gute Datenlage (Open Data + Web Scraping)
+**Basis-Datensatz**
 
-Viele Analyse-Möglichkeiten
+- **Apartment rental offers in Germany**
+- Plattform: Kaggle
+- Beschreibung: Enthält Wohnungsinserate aus Deutschland mit Informationen wie Stadt, Mietpreis, Wohnfläche, Zimmeranzahl usw.
+- Geplanter Speicherort im Repository: `data/raw/apartment_rentals_germany.csv` (oder Original-Dateiname)
 
-Gut für Machine Learning später (Preisvorhersage)
+**Mögliche Zusatzdaten (später zur Anreicherung)**
 
-2. Basis-Datasets (Open Data)
+- Bevölkerungszahlen je Stadt / Region in NRW  
+- Durchschnittseinkommen oder Kaufkraft in NRW  
+- Evtl. weitere offene Datensätze zu Wohnen / Stadtstruktur
 
-Geplante Datengrundlagen:
+## 3. Forschungsfragen
 
-NRW Open Data Portal
+1. **Wie unterscheiden sich die Angebotsmieten pro Quadratmeter zwischen verschiedenen Städten in NRW?**
+2. **Welcher Anteil der angebotenen Wohnungen in NRW liegt unter bestimmten Mietschwellen**  
+   (z. B. unter 10 €/m² oder unter 700 € Kaltmiete)?
+3. **Sind kleinere Wohnungen (z. B. < 50 m²) pro Quadratmeter teurer als größere Wohnungen (z. B. > 80 m²) in NRW?**
 
-Mietspiegel NRW
+Optional später:
 
-Kommunale Mietdaten
+4. Verändert sich das Mietniveau je nach Ausstattung (z. B. Balkon, Einbauküche, etc.), falls im Datensatz vorhanden.
 
-Bevölkerungszahlen
-Quelle: https://open.nrw/
+## 4. Geplante Schritte (Roadmap)
 
-Köln Open Data Portal
+### Phase 1 – Datenbeschaffung (Obtain)
 
-Stadtteile, Demografie, Haushaltsgrößen
-Quelle: https://offenedaten-koeln.de/
+- Kaggle-Datensatz herunterladen
+- Rohdaten in `data/raw/` ablegen
+- Erste Sichtung der Spaltenstruktur
 
-Statistisches Bundesamt
+### Phase 2 – Datenbereinigung (Scrub)
 
-Verbraucherpreisindex Wohnen
-Quelle: https://www-genesis.destatis.de/
+- Filterung auf NRW (z. B. anhand von Bundesland / Städte-Liste)
+- Umgang mit fehlenden Werten (NaN) in Mietpreis, Wohnfläche, Stadt
+- Entfernen klar fehlerhafter Einträge (z. B. 0 m², negativen Preisen etc.)
+- Auswahl relevanter Spalten (z. B. Stadt, Kaltmiete, Wohnfläche, Zimmer)
 
-3. Geplante Data Enrichment (Web Scraping)
+### Phase 3 – Exploration (Explore)
 
-Du wirst zusätzlich scrapen:
+- Deskriptive Statistiken (Mittelwert, Median, Min/Max, Quartile)
+- Verteilungen der Miete pro m² (Histogramme, Boxplots)
+- Vergleich von Städten (z. B. Köln, Düsseldorf, Essen, Dortmund, …)
 
-Immoscout24 (Wohnungsgrößen, Kaltmiete, Lageinformationen)
+### Phase 4 – Analyse (Model)
 
-Wikipedia Stadtteilseiten (Einwohnerzahl, Fläche, Bevölkerungsdichte)
+- Berechnung von Kennzahlen zur Beantwortung der Forschungsfragen:
+  - Miete pro m² je Stadt
+  - Anteile unter bestimmten Schwellen (z. B. < 10 €/m², < 700 €)
+  - Vergleich kleiner vs. großer Wohnungen
+- Evtl. einfache Modelle / Korrelationen (z. B. Wohnfläche vs. €/m²)
 
-Tools:
+### Phase 5 – Interpretation und Präsentation (Interpret)
 
-requests
+- Ergebnisse verständlich zusammenfassen
+- Grafiken für Poster und Notebook erstellen
+- Limitierungen des Datensatzes beschreiben (z. B. nur Angebotsmieten, Zeitbezug)
 
-BeautifulSoup
+## 5. Technische Umsetzung
 
-selbst entwickelter Scraper
-
-4. Research Questions
-
-Wie haben sich Mietpreise in NRW seit 2010 entwickelt?
-
-Welche Städte/Stadtteile sind am teuersten – und warum?
-
-Wie korrelieren Mietpreise mit Faktoren wie Bevölkerungsdichte, Einkommen oder Haushaltsgröße?
-
-Kann ein einfaches Machine-Learning-Modell Mietpreise sinnvoll vorhersagen?
-
-Sind bestimmte Plattformen (z. B. Immoscout) teurer als offizielle Mietspiegel?
-
-5. Roadmap (Milestone Plan)
-Milestone 1 – 07.11.2025
-
-Thema festlegen ✔
-
-Datasets auswählen ✔
-
-Research Questions formulieren ✔
-
-Roadmap erstellen ✔
-
-Milestone 2 – 12.12.2025
-
-Web Scraper bauen
-
-Daten herunterladen
-
-Daten bereinigen
-
-Dataset anreichern (Mietdaten + Stadtteilinfos)
-
-Pipeline-Prototyp erstellen
-
-Neue Daten online hosten (z. B. GitHub)
-
-Milestone 3 – 19.01.2026
-
-Analyse (Statistik + Visualisierung)
-
-Machine-Learning-Teil
-
-Poster erstellen
-
-Code + Notebook fertig
-
-Präsentation
+- Programmiersprache: Python
+- Tools:
+  - Jupyter Notebook (`notebooks/projekt.ipynb`)
+  - `pandas`, `matplotlib` / `seaborn`
+- Datenorganisation:
+  - `data/raw/` für Originaldaten
+  - `data/processed/` für bereinigte / gefilterte Daten
