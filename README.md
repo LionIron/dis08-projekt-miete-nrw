@@ -1,71 +1,81 @@
-# DIS08 Projekt – Mieten in Nordrhein-Westfalen
+# DIS08 Projekt – Mieten & Wohnungsmerkmale in Nordrhein-Westfalen (NRW)
+
 ## Projektziel
 Ziel dieses Projekts ist die Analyse von Angebotsmieten für Wohnungen in Nordrhein-Westfalen (NRW).
-Untersucht wird, wie sich die Miete pro Quadratmeter zwischen Städten unterscheidet und welche Wohnungsmerkmale (z. B. Wohnfläche, Ausstattung, Baujahr) mit höheren oder niedrigeren Mietpreisen zusammenhängen.
+Untersucht wird, wie sich die Miete pro Quadratmeter zwischen Städten unterscheidet und welche Wohnungsmerkmale
+(z. B. Wohnfläche, Balkon, Küche, Baujahr, Heizungsart) mit höheren oder niedrigeren Mietpreisen zusammenhängen.
 
-Das Projekt folgt dem in der Vorlesung vorgestellten OSEMN-Framework (Obtain, Scrub, Explore, Model, Interpret) und nutzt ausschließlich Tools und Methoden aus den begleitenden Folien und Jupyter Notebooks.
+Das Projekt folgt dem in der Vorlesung vorgestellten **OSEMN-Framework (Obtain, Scrub, Explore, Model, Interpret)**
+und nutzt Tools/Methoden aus den begleitenden Folien und Jupyter-Notebooks.
+
 ## Motivation
-Steigende Wohnkosten sind ein zentrales gesellschaftliches Thema.
-Ziel dieses Projekts ist es, mithilfe offener Daten zu untersuchen:
-<br>
-<li>Wie stark sich Mietpreise zwischen Städten in NRW unterscheiden,</li>
-<li>Wie verbreitet günstige bzw. teure Mietangebote sind,</li>
-<li>Ob kleinere Wohnungen pro Quadratmeter teurer sind als größere.</li>
+Steigende Wohnkosten sind ein zentrales gesellschaftliches Thema. Durch die Auswertung offener Angebotsdaten
+lassen sich regionale Unterschiede und Preisfaktoren sichtbar machen (als Marktindikator, nicht als Vertragsmiete).
 
 ## Datensatz
+**Quelle:** *Apartment rental offers in Germany* (Kaggle)  
+Enthält Wohnungsinserate aus ganz Deutschland mit Mietpreis- und Objektmerkmalen.
 
-<b>Quelle:</b><br>
-Apartment rental offers in Germany (Kaggle)
-<li>Angebotsdaten von Wohnungsinseraten</li>
+Speicherort im Repo: `data/raw/immo_data.csv`
 
-<link>https://www.kaggle.com/datasets/corrieaar/apartment-rental-offers-in-germany</link>
-
-## Speicherort
-<code>data/raw/immo_data.csv</code>
-
-## Beschreibung
-Der Datensatz enthält Wohnungsinserate aus ganz Deutschland mit Informationen u. a. zu:
-<li>Bundesland <code>(regio1)</code></li>
-<li>Stadt <code>(regio2)</code></li>
-<li>Kaltmiete <code>(baseRent)</code></li>
-<li>Wohnfläche <code>(livingSpace)</code></li>
-<li>Anzahl Zimmer <code>(noRooms)</code></li>
-<li>Gesamtmiete <code>(totalRent)</code></li>
-<br>
-Für die Analyse wurde ausschließlich Nordrhein-Westfalen betrachtet.
+**Wichtige Spalten (Auswahl):**
+- Bundesland: `regio1`
+- Stadt/Kreis: `regio2`
+- Kaltmiete: `baseRent`
+- Gesamtmiete: `totalRent` (teilweise fehlend)
+- Wohnfläche: `livingSpace`
+- Zimmer: `noRooms`
+- Merkmale: z. B. `balcony`, `hasKitchen`, `heatingType`, `yearConstructed`, `newlyConst`
 
 ## Forschungsfragen
-<ol>1. Wie unterscheiden sich die Angebotsmieten pro Quadratmeter zwischen Städten in NRW?</ol>
-<ol>2. Sind kleinere Wohnungen pro Quadratmeter teurer als größere Wohnungen?</ol>
-<ol>3. Haben bestimmte Wohnungsmerkmale (z. B. Balkon, Neubau) einen messbaren Einfluss auf den Quadratmeterpreis? (> 80 m²)?</ol>
-<ol>4. Lassen sich statistisch signifikante Unterschiede zwischen Wohnungsgruppen nachweisen?</ol>
+1. Wie unterscheiden sich die Angebotsmieten pro Quadratmeter zwischen Städten in NRW?
+2. Sind kleinere Wohnungen pro Quadratmeter teurer als größere Wohnungen?
+3. Haben bestimmte Wohnungsmerkmale (z. B. Balkon, Küche, Neubau) einen messbaren Einfluss auf den Quadratmeterpreis?
+4. Lassen sich **statistisch signifikante** Unterschiede zwischen Wohnungsgruppen nachweisen?
+5. Lassen sich Inserate in NRW in **Cluster** einteilen (z. B. „günstig/klein“, „teuer/modern“), basierend auf Preis und Merkmalen?
 
-## Methodisches Vorgehen
-Das Projekt orientiert sich an den in der Vorlesung behandelten Phasen:
-### Datenaufbereitung (Data Cleaning)
-<li>Entfernen fehlender oder unrealistischer Werte</li>
-<li>Berechnung des Mietpreises pro Quadratmeter</li>
-<li>Filterung extremer Ausreißer</li>
+## Methodisches Vorgehen (OSEMN)
 
-### Exploration
-<li>Deskriptive Statistiken (Mittelwert, Median, Quartile)</li>
-<li>Verteilungen der Quadratmeterpreise</li>
-<li>Stadtvergleiche mittels Aggregationen und Visualisierungen</li>
+### Obtain
+- Datensatz laden und auf NRW filtern (`regio1 == "Nordrhein_Westfalen"`)
 
-### Datenstrukturen & Gruppierung
-<li>Einteilung von Wohnungen nach Größe (z. B. klein / groß)</li>
-<li>Gruppierung nach Städten und Wohnungsmerkmalen</li>
+### Scrub (Data Cleaning)
+- Auswahl relevanter Spalten
+- Umgang mit fehlenden Werten (z. B. `totalRent`)
+- Entfernen unrealistischer Werte (z. B. extrem hohe €/m²)
+- Neue Variable: `price_per_sqm = baseRent / livingSpace`
 
-### Hypothesentests
-<li>Formulierung von Null- und Alternativhypothesen</li>
-<li>Vergleich von Gruppen (z. B. kleine vs. große Wohnungen)</li>
-<li>Einsatz statistischer Tests gemäß Vorlesungsinhalt</li>
+### Explore
+- Deskriptive Statistiken (Median, Quartile)
+- Stadtvergleiche (Median €/m² pro `regio2`)
+- Visualisierungen (Histogramm, Boxplots, Balkendiagramme)
+
+### Model
+- Hypothesentests (z. B. kleine vs. große Wohnungen; Gruppen nach Merkmalen)
+- Optional/Erweiterung: Clustering auf Basis standardisierter numerischer Variablen + codierter Merkmale
+
+### Interpret
+- Ergebnisse zusammenfassen, Limitierungen erklären (Angebotsdaten ≠ Vertragsmieten)
+- Grafiken/Ergebnisse für Poster und Doku nutzbar machen
 
 ## Tools & Technologien
-<li>Python</li>
-<li>Jupyter Notebook</li>
-<li>pandas</li>
-<li>matplotlib</li>
-<li>numpy</li>
+- Python, Jupyter Notebook
+- pandas, NumPy
+- matplotlib
+- Git/GitHub (Versionierung, Dokumentation)
 
-Alle verwendeten Tools wurden im Rahmen der Vorlesung behandelt.
+## Repository-Struktur
+```text
+data/
+  raw/        # Originaldaten (lokal; nicht zwingend im Repo, je nach .gitignore)
+  processed/  # Bereinigte/abgeleitete Daten
+docs/         # Projekt-Dokumentation / Poster
+notebooks/    # Analyse-Notebooks
+src/          # Wiederverwendbare Funktionen/Skripte
+README.md
+project_plan.md
+
+## Hinweis zur Interpretation
+
+Dieses Projekt analysiert Angebotsmieten aus Inseraten. Die Ergebnisse zeigen Marktindikatoren und Trends,
+aber bilden nicht exakt tatsächliche Vertragsmieten ab.
